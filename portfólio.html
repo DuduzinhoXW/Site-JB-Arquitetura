@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio - JB Arquitetura</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcfaf8; }
+        .font-serif { font-family: 'Cormorant Garamond', serif; }
+        .glass-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #eee; }
+        .tab-active { background-color: #5D6C55 !important; color: white !important; }
+        .sub-tab-active { background-color: #DB8852 !important; color: white !important; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar CORRIGIDA com id e transition -->
+<nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-[#1C1C1C] py-4 border-b border-[#333] transition-transform duration-300">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <a href="#home" class="nav-logo">
+            <img src="img/logo.png" alt="JB Arquitetura" class="h-28 md:h-37 w-auto">
+        </a>
+        <div class="hidden md:flex gap-8 items-center">
+            <a href="index.html" class="text-sm uppercase tracking-widest font-medium text-white hover:text-[#DB8852] transition-colors">Início</a>
+            <a href="portfolio.html" class="text-sm uppercase tracking-widest font-medium text-[#DB8852] transition-colors">Portfólio</a>
+            <a href="https://wa.me/5547991171602" target="_blank" class="bg-[#DB8852] text-white px-6 py-2 rounded-full text-sm hover:bg-[#c97a3f] transition-colors">Orçamento</a>
+        </div>
+    </div>
+</nav>
+
+    <main class="pt-32 pb-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="text-[#DB8852] uppercase tracking-[0.3em] text-xs font-bold mb-4 block">Nosso Portfólio</span>
+                <h1 class="text-5xl md:text-6xl text-stone-900 mb-6 font-serif">Projetos que Inspiram</h1>
+                <p class="text-stone-600 max-w-2xl mx-auto text-lg font-light">Explore nossa galeria de projetos, dividida por categorias e clientes.</p>
+            </div>
+
+            <!-- Categorias -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12" id="cat-list"></div>
+
+            <!-- Subcategorias (Clientes) -->
+            <div class="flex flex-col items-center mb-12">
+                <div class="flex flex-wrap justify-center gap-3 mb-8" id="sub-list"></div>
+                <p id="sub-desc" class="text-stone-600 max-w-3xl text-center italic font-light"></p>
+            </div>
+
+            <!-- Grid de Fotos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="grid"></div>
+        </div>
+    </main>
+
+    <script>
+        // ATUALIZADO com TODAS as categorias e subcategorias
+        const data = [
+            { 
+                id: 'comercial', 
+                name: 'Comercial', 
+                subs: [
+                    { id: 'as', name: 'A|S', count: 3 },
+                    { id: 'bn', name: 'B|N', count: 2 },
+                    { id: 'jb', name: 'J|B', count: 2 },
+                    { id: 'jc', name: 'J|C', count: 2 }
+                ]
+            },
+            { 
+                id: 'condominio', 
+                name: 'Condomínio', 
+                subs: [
+                    { id: 'vf', name: 'V|F', count: 5 }
+                ]
+            },
+            { 
+                id: 'geminados', 
+                name: 'Geminados', 
+                subs: [
+                    { id: 'cc', name: 'C|C', count: 1 },
+                    { id: 'cg', name: 'C|G', count: 2 },
+                    { id: 'ej', name: 'E|J', count: 2 },
+                    { id: 'gi', name: 'G|I', count: 3 },
+                    { id: 'jb', name: 'J|B', count: 2 }
+                ]
+            },
+            { 
+                id: 'interiores', 
+                name: 'Interiores', 
+                subs: [
+                    { id: 'jm', name: 'J|M', count: 2 },
+                    { id: 'sv', name: 'S|V', count: 2 },
+                    { id: 'vf', name: 'V|F', count: 3 }
+                ]
+            },
+            
+            { 
+                id: 'residencial', 
+                name: 'Residencial', 
+                subs: [
+                    { id: 'ab', name: 'A|B', count: 1 },
+                    { id: 'ak', name: 'A|K', count: 2 },
+                    { id: 'cj', name: 'C|J', count: 3 },
+                    { id: 'cs', name: 'C|S', count: 3 },
+                    { id: 'ka', name: 'K|A', count: 4 }
+                ]
+            }
+        ];
+
+        let activeCat = data[0].id;
+        let activeSub = data[0].subs[0].id;
+
+        function render() {
+            const catList = document.getElementById('cat-list');
+            catList.innerHTML = data.map(c => `
+                <button onclick="setCat('${c.id}')" class="px-8 py-3 rounded-full font-medium border ${activeCat === c.id ? 'tab-active' : 'bg-white text-stone-600 border-stone-200'}">${c.name}</button>
+            `).join('');
+
+            const currentCat = data.find(c => c.id === activeCat);
+            const subList = document.getElementById('sub-list');
+            subList.innerHTML = currentCat.subs.map(s => `
+                <button onclick="setSub('${s.id}')" class="px-6 py-2 rounded-full text-sm font-medium ${activeSub === s.id ? 'sub-tab-active' : 'bg-stone-200 text-stone-600'}">${s.name}</button>
+            `).join('');
+
+            const currentSub = currentCat.subs.find(s => s.id === activeSub);
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            // ===== CATEGORIA COMERCIAL =====
+            if (activeCat === 'comercial') {
+                
+                if (activeSub === 'as') { // CLIENTE A|S - 3 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/AS/imgs/comercialas1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto A|S - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/AS/imgs/comercialas2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto A|S - 2</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/AS/imgs/comercialas3.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto A|S - 3</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'bn') { // CLIENTE B|N - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/BN/imgs/comercialbn1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto B|N - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/BN/imgs/comercialbn2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto B|N - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'jb') { // CLIENTE J|B - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/JB/comercialjb1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|B - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/JB/comercialjb2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|B - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'jc') { // CLIENTE J|C - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/JC/comercialjc1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|C - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/comercial/JC/comercialjc2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|C - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // ===== CATEGORIA CONDOMÍNIO =====
+            else if (activeCat === 'condominio') {
+                
+                if (activeSub === 'vf') { // CLIENTE V|F - 5 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/condominio/VF/condominio1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/condominio/VF/condominio2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 2</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/condominio/VF/condominio3.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 3</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/condominio/VF/condominio4.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 4</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/condominio/VF/condominio5.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 5</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // ===== CATEGORIA GEMINADOS =====
+            else if (activeCat === 'geminados') {
+                
+                if (activeSub === 'cc') { // CLIENTE C|C - 1 IMAGEM
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/CC/geminadocc1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|C - 1</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'cg') { // CLIENTE C|G - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/CG/geminadoscg1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|G - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/CG/geminadoscg2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|G - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'ej') { // CLIENTE E|J - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/EJ/geminadosej1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto E|J - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/EJ/geminadosej2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto E|J - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'gi') { // CLIENTE G|I - 3 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/GI/geminadosgi1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto G|I - 1</h3>
+                            </div>
+                        </div>
+                       
+                    `;
+                }
+                
+                else if (activeSub === 'jb') { // CLIENTE J|B - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/JB/geminadosjb1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|B - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/geminados/JB/geminadosjb2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|B - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // ===== CATEGORIA INTERIORES =====
+            else if (activeCat === 'interiores') {
+                
+                if (activeSub === 'jm') { // CLIENTE J|M - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/JM/interioresjm1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|M - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/JM/interioresjm2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto J|M - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'sv') { // CLIENTE S|V - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/SV/interioressv1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto S|V - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/SV/interioressv2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto S|V - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'vf') { // CLIENTE V|F - 3 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/VF/interioresvf1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/VF/interioresvf2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 2</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/interiores/VF/interioresvf3.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto V|F - 3</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            
+            // ===== CATEGORIA RESIDENCIAL =====
+            else if (activeCat === 'residencial') {
+                
+                if (activeSub === 'ab') { // CLIENTE A|B - 1 IMAGEM
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/AB/residencialab1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto A|B - 1</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'ak') { // CLIENTE A|K - 2 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/AK/residencialak1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto A|K - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/AK/residencialak2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto A|K - 2</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'cj') { // CLIENTE C|J - 3 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/CJ/residencialcj1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|J - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/CJ/residencialcj2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|J - 2</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/CJ/residencialcj3.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|J - 3</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'cs') { // CLIENTE C|S - 3 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/CS/residencialsc1.jpeg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|S - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/CS/residencialsc2.jpeg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|S - 2</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/CS/residencialsc3.jpeg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto C|S - 3</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                else if (activeSub === 'ka') { // CLIENTE K|A - 4 IMAGENS
+                    grid.innerHTML = `
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/KA/residencialka1.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto K|A - 1</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/KA/residencialka2.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto K|A - 2</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/KA/residencialka3.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto K|A - 3</h3>
+                            </div>
+                        </div>
+                        <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm">
+                            <img src="img/port/residencial/KA/residencialka4.jpg" width="800" height="600" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-end p-8 transition-opacity">
+                                <h3 class="text-white font-serif text-xl">Projeto K|A - 4</h3>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function setCat(id) { activeCat = id; activeSub = data.find(c => c.id === id).subs[0].id; render(); }
+        function setSub(id) { activeSub = id; render(); }
+
+        render();
+
+        // NOVO SCRIPT PARA ESCONDER/MOSTRAR NAVBAR
+        const navbar = document.getElementById('navbar');
+        let lastScrollTop = 0;
+        const scrollThreshold = 10;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (Math.abs(currentScroll - lastScrollTop) > scrollThreshold) {
+                if (currentScroll > lastScrollTop && currentScroll > 100) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+                lastScrollTop = currentScroll;
+            }
+        });
+    </script>
+</body>
+</html>

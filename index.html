@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JB Arquitetura | Arquitetura & Urbanismo</title>
+    
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        cinzel: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        'jb-green': '#5D6C55',
+                        'jb-brown': '#854836',
+                        'jb-orange-dark': '#DB8852',
+                        'jb-olive': '#585220',
+                        'jb-orange-light': '#ED9C5D',
+                        'amber-gold': '#D4A017',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-nav {
+            background-color: #1C1C1C !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #333;
+        }
+        
+        .section-padding {
+            padding: 5rem 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .section-padding {
+                padding: 5rem 3rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .section-padding {
+                padding: 5rem 6rem;
+            }
+        }
+
+        .btn-primary {
+            background-color: #DB8852;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background-color: #c97a3f;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            border: 1px solid white;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            background-color: white;
+            color: #1c1917;
+        }
+        .btn-secondary:active {
+            transform: scale(0.95);
+        }
+
+        .card-hover {
+            transition: all 0.3s;
+        }
+        .card-hover:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-sans text-stone-800 bg-white selection:bg-jb-orange-light/30 selection:text-jb-brown">
+
+    <!-- Navbar CORRIGIDA -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 bg-transparent py-6">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#home" class="nav-logo">
+                <img src="img/logo.png" alt="JB Arquitetura" class="h-28 md:h-37 w-auto brightness-0 invert">
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 items-center">
+                <a href="#home" class="nav-link text-sm uppercase tracking-widest font-medium transition-colors hover:text-[#DB8852] text-white">Início</a>
+                <a href="#sobre" class="nav-link text-sm uppercase tracking-widest font-medium transition-colors hover:text-[#DB8852] text-white">Sobre</a>
+                <a href="#servicos" class="nav-link text-sm uppercase tracking-widest font-medium transition-colors hover:text-[#DB8852] text-white">Serviços</a>
+                <a href="portfólio.html" class="nav-link text-sm uppercase tracking-widest font-medium transition-colors hover:text-[#DB8852] text-white">Portfólio</a>
+                <a href="#contato" class="nav-link text-sm uppercase tracking-widest font-medium transition-colors hover:text-[#DB8852] text-white">Contato</a>
+                <a href="https://wa.me/5547991171602" target="_blank" class="bg-[#DB8852] text-white px-6 py-2 rounded-full text-sm hover:bg-[#c97a3f] transition-colors">Orçamento</a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobile-menu-toggle" class="md:hidden text-white">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[#1C1C1C] shadow-2xl md:hidden border-t border-[#333]">
+            <div class="flex flex-col p-6 gap-4">
+                <a href="#home" class="mobile-nav-link text-lg font-serif text-white border-b border-[#333] pb-2 hover:text-[#DB8852]">Início</a>
+                <a href="#sobre" class="mobile-nav-link text-lg font-serif text-white border-b border-[#333] pb-2 hover:text-[#DB8852]">Sobre</a>
+                <a href="#servicos" class="mobile-nav-link text-lg font-serif text-white border-b border-[#333] pb-2 hover:text-[#DB8852]">Serviços</a>
+                <a href="portfólio.html" class="mobile-nav-link text-lg font-serif text-white border-b border-[#333] pb-2 hover:text-[#DB8852]">Portfólio</a>
+                <a href="#contato" class="mobile-nav-link text-lg font-serif text-white border-b border-[#333] pb-2 hover:text-[#DB8852]">Contato</a>
+                <a href="https://wa.me/5547991171602" target="_blank" class="bg-[#DB8852] text-white text-center mt-2 py-3 rounded-full hover:bg-[#c97a3f] transition-colors">Solicitar Orçamento</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="imagem-fundo.jpeg" alt="Arquitetura Moderna" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+
+            <div class="relative z-10 text-center px-6 max-w-4xl">
+                <span class="block font-cinzel text-amber-gold text-sm md:text-base tracking-[0.4em] mb-4 uppercase fade-in">
+                    ARQUITETURA & URBANISMO
+                </span>
+                 <h1 class="text-3xl md:text-5xl text-white font-montserrat font-[800] mb-6 leading-tight uppercase tracking-tight fade-in">Transformando ideias em espaços com significado</h1>
+                
+                <p class="text-lg md:text-xl text-white/80 mb-10 font-light tracking-wide fade-in" style="transition-delay: 0.2s;">
+                    Projetos arquitetônicos em Guaramirim e Região
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="transition-delay: 0.4s;">
+                    <a href="https://wa.me/5547991171602" target="_blank" class="btn-primary">
+                        Solicitar Orçamento
+                    </a>
+                    <a href="portfólio.html" class="btn-secondary">
+                        Conhecer Projetos
+                    </a>
+                </div>
+            </div>
+
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
+                <div class="w-px h-12 bg-white/30 mx-auto"></div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="sobre" class="section-padding bg-stone-50">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div class="fade-in">
+                    <span class="text-jb-orange-dark uppercase tracking-[0.3em] text-xs font-bold mb-4 block">SOBRE NÓS</span>
+                    <h2 class="text-4xl md:text-5xl text-stone-900 mb-8 font-serif">JB Arquitetura</h2>
+                    <div class="space-y-6 text-stone-600 leading-relaxed text-lg">
+                        <p>
+                            Fundado em 2020 pelas arquitetas e urbanistas Bruna Zopellaro e Juliane Arruda, e fortalecendo o time com a arquiteta Eloisa Stein, o escritório é formado por profissionais que unem técnica, sensibilidade e responsabilidade em cada projeto desenvolvido, conduzindo todas as etapas com dedicação e excelência.
+                        </p>
+                        <p>
+                            Há 6 anos, transformamos sonhos em espaços que contam histórias. Ao longo dessa trajetória, compreendemos que nossa atuação vai muito além da elaboração de projetos: trabalhamos com expectativas, conquistas e momentos que marcam a vida de cada cliente. Cada proposta nasce da escuta atenta, do olhar cuidadoso e do compromisso de materializar sonhos que representam novos capítulos, novas fases e grandes realizações, sempre respeitando a essência e a singularidade de cada família.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8 mt-12">
+                        <div>
+                            <span class="text-4xl font-serif text-jb-green block mb-1">6 Anos</span>
+                            <span class="text-sm uppercase tracking-widest text-stone-400">de atuação</span>
+                        </div>
+                        <div>
+                            <span class="text-4xl font-serif text-jb-green block mb-1">+300</span>
+                            <span class="text-sm uppercase tracking-widest text-stone-400">projetos realizados</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative fade-in" style="transition-delay: 0.2s;">
+                    <div class="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="equipe.jpeg" alt="Equipe JB Arquitetura" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-jb-orange-light/20 rounded-full blur-3xl -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-48 h-48 bg-jb-green/10 rounded-full blur-3xl -z-10"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="servicos" class="section-padding bg-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 fade-in">
+                    <span class="text-jb-orange-dark uppercase tracking-[0.3em] text-xs font-bold mb-4 block">O que fazemos</span>
+                    <h2 class="text-4xl md:text-5xl text-stone-900 font-serif">Nossos Serviços</h2>
+                    <div class="w-20 h-1 bg-jb-green mx-auto mt-6"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="p-10 bg-stone-50 rounded-2xl card-hover border border-stone-100 group fade-in">
+                        <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center text-jb-green mb-6 group-hover:bg-jb-green group-hover:text-white transition-colors">
+                            <i data-lucide="home"></i>
+                        </div>
+                        <h3 class="text-2xl mb-4 text-stone-900 font-serif">Residencial</h3>
+                        <p class="text-stone-600 leading-relaxed">Casas personalizadas que refletem o estilo de vida único de cada cliente.</p>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="p-10 bg-stone-50 rounded-2xl card-hover border border-stone-100 group fade-in" style="transition-delay: 0.1s;">
+                        <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center text-jb-green mb-6 group-hover:bg-jb-green group-hover:text-white transition-colors">
+                            <i data-lucide="building-2"></i>
+                        </div>
+                        <h3 class="text-2xl mb-4 text-stone-900 font-serif">Comercial</h3>
+                        <p class="text-stone-600 leading-relaxed">Espaços funcionais e impactantes que fortalecem a identidade da marca.</p>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="p-10 bg-stone-50 rounded-2xl card-hover border border-stone-100 group fade-in" style="transition-delay: 0.2s;">
+                        <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center text-jb-green mb-6 group-hover:bg-jb-green group-hover:text-white transition-colors">
+                            <i data-lucide="paintbrush"></i>
+                        </div>
+                        <h3 class="text-2xl mb-4 text-stone-900 font-serif">Interiores</h3>
+                        <p class="text-stone-600 leading-relaxed">Ambientes harmoniosos com seleção cuidadosa de materiais, cores e mobiliário.</p>
+                    </div>
+                    <!-- Service 4 -->
+                    <div class="p-10 bg-stone-50 rounded-2xl card-hover border border-stone-100 group fade-in" style="transition-delay: 0.3s;">
+                        <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center text-jb-green mb-6 group-hover:bg-jb-green group-hover:text-white transition-colors">
+                            <i data-lucide="layers"></i>
+                        </div>
+                        <h3 class="text-2xl mb-4 text-stone-900 font-serif">Geminados</h3>
+                        <p class="text-stone-600 leading-relaxed">Soluções inteligentes e personalizadas que oferecem qualidade de vida e valorização do investimento.</p>
+                    </div>
+                    <!-- Service 5 -->
+                    <div class="p-10 bg-stone-50 rounded-2xl card-hover border border-stone-100 group fade-in" style="transition-delay: 0.4s;">
+                        <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center text-jb-green mb-6 group-hover:bg-jb-green group-hover:text-white transition-colors">
+                            <i data-lucide="map"></i>
+                        </div>
+                        <h3 class="text-2xl mb-4 text-stone-900 font-serif">Condomínios e Loteamentos</h3>
+                        <p class="text-stone-600 leading-relaxed">Projetos que unem organização, qualidade de vida e potencial de crescimento.</p>
+                    </div>
+                    <!-- Service 6 -->
+                    <div class="p-10 bg-stone-50 rounded-2xl card-hover border border-stone-100 group fade-in" style="transition-delay: 0.5s;">
+                        <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center text-jb-green mb-6 group-hover:bg-jb-green group-hover:text-white transition-colors">
+                            <i data-lucide="file-check"></i>
+                        </div>
+                        <h3 class="text-2xl mb-4 text-stone-900 font-serif">Regularização de Obra</h3>
+                        <p class="text-stone-600 leading-relaxed">Essencial para valorização do imóvel e segurança patrimonial.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfólio" class="section-padding bg-stone-900 text-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 fade-in">
+                    <div>
+                        <span class="text-jb-orange-light uppercase tracking-[0.3em] text-xs font-bold mb-4 block">Portfólio</span>
+                        <h2 class="text-4xl md:text-5xl font-serif">Projetos em Destaque</h2>
+                    </div>
+                    <p class="max-w-md text-white/60 font-light">
+                        Uma seleção de nossos trabalhos mais recentes, onde cada detalhe foi pensado para criar experiências únicas.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Project 1 -->
+                    <div class="group relative aspect-square overflow-hidden rounded-xl cursor-pointer fade-in">
+                        <img src="residencial.jpg" alt="Residência Contemporânea" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                            <span class="text-jb-orange-light text-xs uppercase tracking-widest mb-2">Residencial</span>
+                            <h3 class="text-xl font-serif">Residência Contemporânea</h3>
+                        </div>
+                    </div>
+                    <!-- Project 2 -->
+                    <div class="group relative aspect-square overflow-hidden rounded-xl cursor-pointer fade-in" style="transition-delay: 0.1s;">
+                        <img src="comercial.jpg" alt="Galpão comercial" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                            <span class="text-jb-orange-light text-xs uppercase tracking-widest mb-2">Comercial</span>
+                            <h3 class="text-xl font-serif">Galpão comercial com mais de 2.000m²</h3>
+                        </div>
+                    </div>
+                    <!-- Project 3 -->
+                    <div class="group relative aspect-square overflow-hidden rounded-xl cursor-pointer fade-in" style="transition-delay: 0.2s;">
+                        <img src="condominio.jpg" alt="Condomínio" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                            <span class="text-jb-orange-light text-xs uppercase tracking-widest mb-2">Condomínio</span>
+                            <h3 class="text-xl font-serif">Primeiro condomínio horizontal de lotes de Guaramirim</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16 text-center fade-in">
+                    <a href="portfólio.html" class="btn-secondary border-white/20 hover:border-white inline-block">
+                        Ver Portfólio Completo
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Differentials Section -->
+        <section class="section-padding bg-white">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="order-2 lg:order-1">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="flex items-center gap-4 p-6 bg-stone-50 rounded-xl border border-stone-100 fade-in">
+                                <div class="text-jb-green shrink-0"><i data-lucide="check-circle-2"></i></div>
+                                <span class="font-medium text-stone-800">Arquitetura 100% personalizada</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-6 bg-stone-50 rounded-xl border border-stone-100 fade-in" style="transition-delay: 0.1s;">
+                                <div class="text-jb-green shrink-0"><i data-lucide="heart"></i></div>
+                                <span class="font-medium text-stone-800">Atendimento humanizado</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-6 bg-stone-50 rounded-xl border border-stone-100 fade-in" style="transition-delay: 0.2s;">
+                                <div class="text-jb-green shrink-0"><i data-lucide="lightbulb"></i></div>
+                                <span class="font-medium text-stone-800">Técnica + criatividade</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-6 bg-stone-50 rounded-xl border border-stone-100 fade-in" style="transition-delay: 0.3s;">
+                                <div class="text-jb-green shrink-0"><i data-lucide="check-circle-2"></i></div>
+                                <span class="font-medium text-stone-800">Compromisso com qualidade</span>
+                            </div>
+                            <div class="flex items-center gap-4 p-6 bg-stone-50 rounded-xl border border-stone-100 fade-in" style="transition-delay: 0.4s;">
+                                <div class="text-jb-green shrink-0"><i data-lucide="user-check"></i></div>
+                                <span class="font-medium text-stone-800">Relacionamento de confiança</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-1 lg:order-2 fade-in">
+                        <span class="text-jb-orange-dark uppercase tracking-[0.3em] text-xs font-bold mb-4 block">Diferenciais</span>
+                        <h2 class="text-4xl md:text-5xl text-stone-900 mb-8 font-serif">Por que escolher a JB Arquitetura?</h2>
+                        <p class="text-stone-600 text-lg leading-relaxed mb-8">
+                            Nosso compromisso vai além do desenho técnico. Buscamos entender a essência de cada cliente para traduzir desejos em formas, cores e texturas que façam sentido.
+                        </p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3 text-stone-700">
+                                <i data-lucide="arrow-right" class="w-5 h-5 text-jb-green shrink-0 mt-1"></i>
+                                <span>Metodologia de trabalho focada na experiência do usuário.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-stone-700">
+                                <i data-lucide="arrow-right" class="w-5 h-5 text-jb-green shrink-0 mt-1"></i>
+                                <span>Acompanhamento próximo em todas as etapas do projeto.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-stone-700">
+                                <i data-lucide="arrow-right" class="w-5 h-5 text-jb-green shrink-0 mt-1"></i>
+                                <span>Equilíbrio perfeito entre estética contemporânea e funcionalidade.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-24 px-6 bg-jb-green relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+
+            <div class="max-w-4xl mx-auto text-center relative z-10 fade-in">
+                <h2 class="text-4xl md:text-6xl text-white font-serif mb-8">
+                    Vamos transformar seu sonho em realidade?
+                </h2>
+                <p class="text-white/80 text-lg md:text-xl mb-12 font-light max-w-2xl mx-auto">
+                    Estamos prontos para ouvir sua história e criar o projeto perfeito para você. Entre em contato agora mesmo.
+                </p>
+                <a href="https://wa.me/5547991171602" target="_blank" class="inline-flex items-center gap-3 bg-white text-jb-green px-10 py-5 rounded-full text-xl font-bold transition-all hover:bg-stone-100 hover:scale-105 active:scale-95 shadow-2xl">
+                    <i data-lucide="message-circle"></i>
+                    Falar no WhatsApp
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contato" class="section-padding bg-stone-50">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-16">
+                    <div class="fade-in">
+                        <span class="text-jb-orange-dark uppercase tracking-[0.3em] text-xs font-bold mb-4 block">Contato</span>
+                        <h2 class="text-4xl md:text-5xl text-stone-900 mb-12 font-serif">Entre em Contato</h2>
+                        
+                        <div class="space-y-8">
+                            <div class="flex items-start gap-6">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-jb-green shadow-sm shrink-0">
+                                    <i data-lucide="phone"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm uppercase tracking-widest text-stone-400 mb-1">WhatsApp</h4>
+                                    <p class="text-lg text-stone-800 font-medium">(47) 99117-1602</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-6">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-jb-green shadow-sm shrink-0">
+                                    <i data-lucide="instagram"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm uppercase tracking-widest text-stone-400 mb-1">Instagram</h4>
+                                    <a href="https://instagram.com/jb.arquitetas" target="_blank" class="text-lg text-stone-800 font-medium hover:text-jb-green transition-colors">@jb.arquitetas</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-6">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-jb-green shadow-sm shrink-0">
+                                    <i data-lucide="mail"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm uppercase tracking-widest text-stone-400 mb-1">Email</h4>
+                                    <p class="text-lg text-stone-800 font-medium">jb.arquiteturaeurbanismo@gmail.com</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-6">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-jb-green shadow-sm shrink-0">
+                                    <i data-lucide="map-pin"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm uppercase tracking-widest text-stone-400 mb-1">Endereço</h4>
+                                    <p class="text-lg text-stone-800 font-medium leading-relaxed">
+                                        Rua Hermínio Stringari, 1351, Bairro Corticeira<br>
+                                        Guaramirim/SC - CEP 89270-000
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-stone-100 fade-in" style="transition-delay: 0.2s;">
+                        <h3 class="text-2xl font-serif mb-8 text-stone-900">Envie uma mensagem</h3>
+                        <form class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-xs uppercase tracking-widest text-stone-400 font-bold">Nome</label>
+                                    <input type="text" class="w-full bg-stone-50 border border-stone-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-jb-green/20 transition-all" placeholder="Seu nome completo">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-xs uppercase tracking-widest text-stone-400 font-bold">Telefone</label>
+                                    <input type="tel" class="w-full bg-stone-50 border border-stone-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-jb-green/20 transition-all" placeholder="(00) 00000-0000">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs uppercase tracking-widest text-stone-400 font-bold">Email</label>
+                                <input type="email" class="w-full bg-stone-50 border border-stone-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-jb-green/20 transition-all" placeholder="seu@email.com">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs uppercase tracking-widest text-stone-400 font-bold">Mensagem</label>
+                                <textarea rows="4" class="w-full bg-stone-50 border border-stone-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-jb-green/20 transition-all" placeholder="Como podemos ajudar?"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-[#DB8852] text-white py-4 rounded-full text-lg font-medium hover:bg-[#c97a3f] transition-colors">
+                                Enviar Mensagem
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-20 w-full h-[400px] bg-stone-200 rounded-3xl overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500 fade-in">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3578.435889601174!2d-49.0116854236965!3d-26.40939227694982!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deb94444444445%3A0x4444444444444444!2sR.%20Herm%C3%ADnio%20Stringari%2C%201351%20-%20Corticeira%2C%20Guaramirim%20-%20SC%2C%2089270-000!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" 
+                        width="100%" 
+                        height="100%" 
+                        style="border: 0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-white py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <h2 class="font-serif text-2xl font-bold tracking-tighter mb-2">
+                    JB <span class="font-light">ARQUITETURA</span>
+                </h2>
+                <p class="text-white/40 text-sm">© 2024 JB Arquitetura e Urbanismo. Todos os direitos reservados.</p>
+            </div>
+
+            <div class="flex gap-6">
+                <a href="https://instagram.com/jb.arquitetas" target="_blank" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-stone-900 transition-all">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
+                <a href="https://wa.me/5547991171602" target="_blank" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-stone-900 transition-all">
+                    <i data-lucide="phone" class="w-5 h-5"></i>
+                </a>
+                <a href="mailto:jb.arquiteturaeurbanismo@gmail.com" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-stone-900 transition-all">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                </a>
+            </div>
+
+            <div class="text-center md:text-right">
+                <p class="text-white/40 text-xs uppercase tracking-widest">Desenvolvido com sofisticação</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Navbar Scroll Effect - Esconder/Mostrar
+        const navbar = document.getElementById('navbar');
+        const navLogo = document.querySelector('.nav-logo img');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        let lastScrollTop = 0;
+        const scrollThreshold = 10;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Efeito de esconder/mostrar
+            if (Math.abs(currentScroll - lastScrollTop) > scrollThreshold) {
+                if (currentScroll > lastScrollTop && currentScroll > 100) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+                lastScrollTop = currentScroll;
+            }
+
+            // Efeito de mudar cor do fundo (mantendo o mesmo estilo)
+            if (window.scrollY > 50) {
+                navbar.classList.add('glass-nav');
+                navbar.classList.remove('bg-transparent');
+                navLogo.classList.remove('brightness-0', 'invert');
+                navLinks.forEach(link => {
+                    link.classList.add('text-white');
+                });
+                mobileMenuToggle.classList.add('text-white');
+            } else {
+                navbar.classList.remove('glass-nav');
+                navbar.classList.add('bg-transparent');
+                navLogo.classList.add('brightness-0', 'invert');
+                navLinks.forEach(link => {
+                    link.classList.add('text-white');
+                });
+                mobileMenuToggle.classList.add('text-white');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenuToggle.innerHTML = '<i data-lucide="menu"></i>';
+            } else {
+                mobileMenuToggle.innerHTML = '<i data-lucide="x"></i>';
+            }
+            lucide.createIcons();
+        });
+
+        // Close mobile menu on link click
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuToggle.innerHTML = '<i data-lucide="menu"></i>';
+                lucide.createIcons();
+            });
+        });
+
+        // Fade-in Animation on Scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
